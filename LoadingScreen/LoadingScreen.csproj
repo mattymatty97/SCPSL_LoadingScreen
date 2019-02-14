@@ -29,12 +29,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\References\UnityEngine.dll</HintPath>
+    <!--<Reference Include="UnityEngine">
+      <HintPath>..\References\unused\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\References\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\References\unused\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>..\References\unused\UnityEngine.Networking.dll</HintPath>
+    </Reference>-->
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventHandlers.cs" />
