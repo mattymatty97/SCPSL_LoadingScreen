@@ -31,15 +31,16 @@
     <Reference Include="System.Core" />
     <!--<Reference Include="UnityEngine">
       <HintPath>..\References\unused\UnityEngine.dll</HintPath>
-    </Reference>
+    </Reference>-->
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\References\unused\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
+    <!--<Reference Include="UnityEngine.Networking">
       <HintPath>..\References\unused\UnityEngine.Networking.dll</HintPath>
     </Reference>-->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="LoadingScreen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

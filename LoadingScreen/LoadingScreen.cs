@@ -12,13 +12,14 @@ namespace LoadingScreen
         description = "Improves \"waiting for players\" Screen by teleporting people to random doors",
         id = "mattymatty.loadingscreen",
         SmodMajor = 3,
-        SmodMinor = 2,
+        SmodMinor = 3,
         SmodRevision = 0,
-        version = "0.0.1"
+        version = "1.0.0"
             )]
     public class LoadingScreen : Plugin
     {
         public string[] doors;
+        public int seconds;
         public EventHandlers Handlers { get; private set; }
 
         public override void Register()
@@ -28,17 +29,19 @@ namespace LoadingScreen
             {
                 "*"
             };
-            AddConfig(new ConfigSetting("ls_doorId", defaultDoors, SettingType.LIST, true,
-                "Ranks allowed to adjust player Preferences."));
+            AddConfig(new ConfigSetting("ls_doorId", defaultDoors, SettingType.LIST, true,"list of door ids to use"));
+            AddConfig(new ConfigSetting("ls_refresh_time", 15, SettingType.NUMERIC, true,"seconds betwen screen refresh"));
 
             Handlers = new EventHandlers(this);
 
             AddEventHandlers(Handlers, Priority.Low);
+            AddCommand("ls_refresh",new CommandHandler(Handlers,this));
         }
 
         public void RefreshConfig()
         {
             doors = GetConfigList("ls_doorId");
+            seconds = GetConfigInt("ls_refresh_time");
         }
 
         public override void OnEnable()
