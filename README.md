@@ -17,4 +17,20 @@
 <ul>
 <li>* ( means every door in the facility )</li>
 </ul>
-<p><strong>&nbsp;</strong></p>
+<u1></u1>
+<p>Config:</p>
+<ul>
+<li>ls_refresh_time</li>
+</ul>
+<p>Type:</p>
+<ul>
+<li>Integer</li>
+</ul>
+<p>Description:</p>
+<ul>
+<li>Number of seconds between each screen refresh</li>
+</ul>
+<p>Default:</p>
+<ul>
+<li>15</li>
+</ul>
