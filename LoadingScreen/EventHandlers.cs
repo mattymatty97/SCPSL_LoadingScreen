@@ -32,7 +32,7 @@ namespace LoadingScreen
         {
             if (door != null && player != null && player.TeamRole.Team == Team.NONE)
             {
-                player.Teleport(door.Position + Vector.Up);
+                player.Teleport(door.Position + Vector.One);
             }
         }
 
