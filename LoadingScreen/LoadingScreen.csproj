@@ -21,23 +21,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\References\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Smod2">
       <HintPath>..\References\Smod2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <!--<Reference Include="UnityEngine">
-      <HintPath>..\References\unused\UnityEngine.dll</HintPath>
-    </Reference>-->
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\References\unused\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <!--<Reference Include="UnityEngine.Networking">
-      <HintPath>..\References\unused\UnityEngine.Networking.dll</HintPath>
-    </Reference>-->
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />

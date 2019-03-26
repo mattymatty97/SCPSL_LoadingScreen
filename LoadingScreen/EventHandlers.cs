@@ -1,11 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using ServerMod2.API;
 using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
-using UnityEngine;
-using Random = System.Random;
 
 namespace LoadingScreen
 {
@@ -13,60 +11,57 @@ namespace LoadingScreen
     {
         private readonly LoadingScreen plugin;
 
-        private Smod2.API.Door[] doors;
-        
-        private Random rnd = new Random();
+        private Door[] doors = { };
 
-        private bool preRound = false;
+        private readonly Random rnd = new Random();
+
+        private DateTime? nextRefreshTime;
+        private bool preRound;
 
         public EventHandlers(LoadingScreen plugin)
         {
             this.plugin = plugin;
         }
 
+        public Door GetRndDoor()
+        {
+            return doors.Any() ? doors[rnd.Next(0, doors.Length)] : null;
+        }
+
+        public static void TeleportToDoor(Player player, Door door)
+        {
+            if (door != null && player != null && player.TeamRole.Team == Team.NONE)
+            {
+                player.Teleport(door.Position + Vector.Up);
+            }
+        }
+
+        public void TeleportToRandomDoors(params Player[] players)
+        {
+            foreach (Player player in players)
+            {
+                TeleportToDoor(player, GetRndDoor());
+            }
+        }
+
+        public void TeleportToRandomDoors(IEnumerable<Player> players)
+        {
+            foreach (Player player in players)
+            {
+                TeleportToDoor(player, GetRndDoor());
+            }
+        }
+
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
         {
             plugin.RefreshConfig();
-            if (plugin.doors.Contains("*"))
-            {
-                /*Door escape = (Door) ev.Server.Map.GetDoors().First(x => x.Name.Equals("ESCAPE")).GetComponent();
-                Quaternion rot = escape.localRot;
-                */
-                doors = ev.Server.Map.GetDoors()
-                    /*.Where(x =>
-                {
-                    if (x.Name.Equals("SURFACE_GATE"))
-                        return false;
-                    Quaternion rotation = ((Door) x.GetComponent()).localRot;
-                    Quaternion rRotation = new Quaternion(-rotation.x,-rotation.y,rotation.z,rotation.w);
-                    bool result = rot == rotation || rot == rRotation;
-                    plugin.Info($"{x.Name} : {result}");
-                    return result;
-                })
-                */.ToArray();
-            }
-            else
-                doors = ev.Server.Map.GetDoors().Where(x => plugin.doors.Contains(x.Name.ToUpper())).ToArray();
-            
-            next = DateTime.MaxValue;
-            
+
+            doors = plugin.doors.Contains("*") ? ev.Server.Map.GetDoors().ToArray() : ev.Server.Map.GetDoors().Where(door => plugin.doors.Contains(door.Name.ToUpper())).ToArray();
+
+            nextRefreshTime = null;
+
             plugin.Info($"Available Doors: {doors.Length}");
             preRound = true;
-        }
-
-        public void OnPlayerJoin(PlayerJoinEvent ev)
-        {
-            if (preRound)
-            {
-                if(plugin.Server.GetPlayers().Count <= 1)
-                    next = DateTime.Now.AddSeconds(plugin.seconds);
-                if (ev.Player.TeamRole.Team == Smod2.API.Team.NONE)
-                {
-                    Smod2.API.Door door = getRndDoor();
-                    ev.Player.Teleport(door.Position + Vector.One);
-                }
-
-            }
         }
 
         public void OnRoundStart(RoundStartEvent ev)
@@ -74,32 +69,33 @@ namespace LoadingScreen
             preRound = false;
         }
 
-        public Smod2.API.Door getRndDoor()
+        public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            return doors[rnd.Next(0, doors.Length)];
+            if (!preRound)
+                return;
+
+            if (nextRefreshTime == null)
+                nextRefreshTime = DateTime.Now.AddSeconds(plugin.seconds);
+
+            TeleportToRandomDoors(ev.Player);
         }
 
-        private DateTime next;
         public void OnFixedUpdate(FixedUpdateEvent ev)
         {
-            if (preRound && next < DateTime.Now)
+            if (!preRound || nextRefreshTime == null || nextRefreshTime > DateTime.Now)
+                return;
+
+            List<Player> players = plugin.Server.GetPlayers();
+
+            if (players.Any())
             {
-                if (plugin.Server.GetPlayers().Count > 0)
-                {
-                    foreach (var player in plugin.Server.GetPlayers())
-                    {
-                        if (player.TeamRole.Team == Smod2.API.Team.NONE)
-                        {
-                            Smod2.API.Door door = getRndDoor();
-                            player.Teleport(door.Position + Vector.One);
-                        }
-                    }
-                    next = DateTime.Now.AddSeconds(plugin.seconds);
-                }
-                else
-                {
-                    next = DateTime.MaxValue;
-                }
+                TeleportToRandomDoors(players);
+
+                nextRefreshTime = DateTime.Now.AddSeconds(plugin.seconds);
+            }
+            else
+            {
+                nextRefreshTime = null;
             }
         }
     }
