@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;

@@ -14,7 +14,7 @@ namespace LoadingScreen
         SmodMajor = 3,
         SmodMinor = 3,
         SmodRevision = 0,
-        version = "1.1.0"
+        version = "1.2.0"
     )]
     public class LoadingScreen : Plugin
     {
@@ -44,7 +44,7 @@ namespace LoadingScreen
 
         private static string[] ArrayToUpper(string[] inArray)
         {
-            return inArray.Select(index => index.ToUpper()).ToArray();
+            return inArray.Select(index => index.ToUpper().Trim()).ToArray();
         }
 
         public override void OnEnable()
